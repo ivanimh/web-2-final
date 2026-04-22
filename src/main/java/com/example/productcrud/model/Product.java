@@ -1,9 +1,7 @@
 package com.example.productcrud.model;
 
 import java.time.LocalDate;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -17,8 +15,9 @@ public class Product {
     @Column(nullable = false, length = 200)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 50)
+    // Diubah dari @Enumerated enum menjadi relasi ke entity Category
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
     private long price;
@@ -37,25 +36,9 @@ public class Product {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    public Product() {
-    }
+    public Product() {}
 
-    public Product(Long id, String name, Category category, long price, int stock,
-                   String description, boolean active, LocalDate createdAt) {
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.price = price;
-        this.stock = stock;
-        this.description = description;
-        this.active = active;
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
+    public Long getId() { return id; }
     public void setId(Long id) {
         this.id = id;
     }
@@ -63,7 +46,6 @@ public class Product {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -71,23 +53,16 @@ public class Product {
     public Category getCategory() {
         return category;
     }
-
     public void setCategory(Category category) {
         this.category = category;
     }
 
-    public long getPrice() {
-        return price;
-    }
-
+    public long getPrice() { return price; }
     public void setPrice(long price) {
         this.price = price;
     }
 
-    public int getStock() {
-        return stock;
-    }
-
+    public int getStock() { return stock; }
     public void setStock(int stock) {
         this.stock = stock;
     }
@@ -95,7 +70,6 @@ public class Product {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -103,7 +77,6 @@ public class Product {
     public boolean isActive() {
         return active;
     }
-
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -111,7 +84,6 @@ public class Product {
     public LocalDate getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
@@ -119,7 +91,6 @@ public class Product {
     public User getOwner() {
         return owner;
     }
-
     public void setOwner(User owner) {
         this.owner = owner;
     }

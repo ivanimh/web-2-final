@@ -4,8 +4,9 @@ import com.example.productcrud.model.Category;
 import com.example.productcrud.model.Product;
 import com.example.productcrud.model.User;
 import com.example.productcrud.repository.UserRepository;
+import com.example.productcrud.service.CategoryService;
 import com.example.productcrud.service.ProductService;
-import java.time.LocalDate;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -13,14 +14,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+
 @Controller
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
     private final UserRepository userRepository;
 
-    public ProductController(ProductService productService, UserRepository userRepository) {
+    public ProductController(ProductService productService,
+                             CategoryService categoryService,
+                             UserRepository userRepository) {
         this.productService = productService;
+        this.categoryService = categoryService;
         this.userRepository = userRepository;
     }
 
@@ -34,10 +41,31 @@ public class ProductController {
         return "redirect:/products";
     }
 
+    // LIST dengan pagination + search + filter
     @GetMapping("/products")
-    public String listProducts(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String listProducts(@AuthenticationPrincipal UserDetails userDetails,
+                               @RequestParam(defaultValue = "") String keyword,
+                               @RequestParam(required = false) Long categoryId,
+                               @RequestParam(defaultValue = "0") int page,
+                               Model model) {
         User currentUser = getCurrentUser(userDetails);
-        model.addAttribute("products", productService.findAllByOwner(currentUser));
+
+        // Resolve category dari ID (null jika tidak dipilih)
+        Category selectedCategory = null;
+        if (categoryId != null) {
+            selectedCategory = categoryService.findByIdAndOwner(categoryId, currentUser).orElse(null);
+        }
+
+        Page<Product> productPage = productService.findByOwnerWithFilter(
+                currentUser, keyword, selectedCategory, page);
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", productPage.getNumber());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("categories", categoryService.findAllByOwner(currentUser));
         return "product/list";
     }
 
@@ -52,34 +80,42 @@ public class ProductController {
                     return "product/detail";
                 })
                 .orElseGet(() -> {
-                    redirectAttributes.addFlashAttribute("errorMessage",
-                            "Produk tidak ditemukan.");
+                    redirectAttributes.addFlashAttribute("errorMessage", "Produk tidak ditemukan.");
                     return "redirect:/products";
                 });
     }
 
     @GetMapping("/products/new")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        User currentUser = getCurrentUser(userDetails);
         Product product = new Product();
         product.setCreatedAt(LocalDate.now());
         model.addAttribute("product", product);
-        model.addAttribute("categories", Category.values());
+        model.addAttribute("categories", categoryService.findAllByOwner(currentUser));
         return "product/form";
     }
 
     @PostMapping("/products/save")
     public String saveProduct(@ModelAttribute Product product,
+                              @RequestParam(required = false) Long categoryId,
                               @AuthenticationPrincipal UserDetails userDetails,
                               RedirectAttributes redirectAttributes) {
         User currentUser = getCurrentUser(userDetails);
 
         if (product.getId() != null) {
-            // Edit: pastikan produk milik user ini
             boolean isOwner = productService.findByIdAndOwner(product.getId(), currentUser).isPresent();
             if (!isOwner) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Produk tidak ditemukan.");
                 return "redirect:/products";
             }
+        }
+
+        // Set category dari ID yang dipilih
+        if (categoryId != null) {
+            categoryService.findByIdAndOwner(categoryId, currentUser)
+                    .ifPresent(product::setCategory);
+        } else {
+            product.setCategory(null);
         }
 
         product.setOwner(currentUser);
@@ -96,12 +132,11 @@ public class ProductController {
         return productService.findByIdAndOwner(id, currentUser)
                 .map(product -> {
                     model.addAttribute("product", product);
-                    model.addAttribute("categories", Category.values());
+                    model.addAttribute("categories", categoryService.findAllByOwner(currentUser));
                     return "product/form";
                 })
                 .orElseGet(() -> {
-                    redirectAttributes.addFlashAttribute("errorMessage",
-                            "Produk tidak ditemukan.");
+                    redirectAttributes.addFlashAttribute("errorMessage", "Produk tidak ditemukan.");
                     return "redirect:/products";
                 });
     }
