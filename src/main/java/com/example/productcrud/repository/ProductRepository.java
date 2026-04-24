@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Page<Product> findByOwner(User owner, Pageable pageable);
+    Page<Product> findByOwner(Long ownerId, Pageable pageable);
 
-    Optional<Product> findByIdAndOwner(Long id, User owner);
-}
+    Optional<Product> findByIdAndOwner(Long id, Long ownerId);
+} //usernya ganti ke id

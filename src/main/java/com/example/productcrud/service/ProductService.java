@@ -22,13 +22,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    // Dipanggil dari ProductController
     public Page<Product> findByOwner(User owner, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
-        return productRepository.findByOwner(owner, pageable);
+        return productRepository.findByOwner(owner.getId(), pageable);
     }
 
     public Optional<Product> findByIdAndOwner(Long id, User owner) {
-        return productRepository.findByIdAndOwner(id, owner);
+        return productRepository.findByIdAndOwner(id, owner.getId());
     }
 
     public Product save(Product product) {
@@ -36,7 +37,7 @@ public class ProductService {
     }
 
     public void deleteByIdAndOwner(Long id, User owner) {
-        productRepository.findByIdAndOwner(id, owner)
+        productRepository.findByIdAndOwner(id, owner.getId())
                 .ifPresent(productRepository::delete);
     }
 }
