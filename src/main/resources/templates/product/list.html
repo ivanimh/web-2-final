@@ -16,28 +16,6 @@
         <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
         <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-        <!-- Search & Filter -->
-        <form method="get" action="/products" class="row g-2 mb-3">
-            <div class="col-md-5">
-                <input type="text" name="keyword" class="form-control"
-                       placeholder="Cari nama produk..."
-                       th:value="${keyword}" />
-            </div>
-            <div class="col-md-4">
-                <select name="categoryId" class="form-select">
-                    <option value="">Semua Kategori</option>
-                    <option th:each="cat : ${categories}"
-                            th:value="${cat.id}"
-                            th:text="${cat.name}"
-                            th:selected="${cat.id == selectedCategoryId}">
-                    </option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-outline-primary w-100">Cari</button>
-            </div>
-        </form>
-
         <!-- Info total -->
         <p class="text-muted small" th:if="${totalItems > 0}">
             Menampilkan <span th:text="${products.size()}"></span> dari
@@ -46,13 +24,13 @@
             <span th:text="${totalPages}"></span>)
         </p>
 
-        <!-- Tabel produk -->
+        <!-- Kosong -->
         <div th:if="${products.empty}" class="text-center text-muted py-5">
-            <p>Tidak ada produk yang ditemukan.</p>
-            <a th:if="${keyword == '' and selectedCategoryId == null}"
-               href="/products/new" class="btn btn-primary">Tambah Produk Pertama</a>
+            <p>Belum ada produk.</p>
+            <a href="/products/new" class="btn btn-primary">Tambah Produk Pertama</a>
         </div>
 
+        <!-- Tabel produk -->
         <table th:unless="${products.empty}" class="table table-bordered table-hover">
             <thead class="table-light">
             <tr>
@@ -101,8 +79,7 @@
 
                 <!-- Tombol Previous -->
                 <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/products(page=${currentPage - 1}, keyword=${keyword}, categoryId=${selectedCategoryId})}">
+                    <a class="page-link" th:href="@{/products(page=${currentPage - 1})}">
                         &laquo; Sebelumnya
                     </a>
                 </li>
@@ -112,21 +89,21 @@
                     th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                     th:classappend="${i == currentPage} ? 'active'">
                     <a class="page-link"
-                       th:href="@{/products(page=${i}, keyword=${keyword}, categoryId=${selectedCategoryId})}"
+                       th:href="@{/products(page=${i})}"
                        th:text="${i + 1}">
                     </a>
                 </li>
 
                 <!-- Tombol Next -->
                 <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/products(page=${currentPage + 1}, keyword=${keyword}, categoryId=${selectedCategoryId})}">
+                    <a class="page-link" th:href="@{/products(page=${currentPage + 1})}">
                         Berikutnya &raquo;
                     </a>
                 </li>
 
             </ul>
         </nav>
+
     </div>
 </main>
 </body>

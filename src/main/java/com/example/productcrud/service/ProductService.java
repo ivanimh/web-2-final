@@ -1,6 +1,5 @@
 package com.example.productcrud.service;
 
-import com.example.productcrud.model.Category;
 import com.example.productcrud.model.Product;
 import com.example.productcrud.model.User;
 import com.example.productcrud.repository.ProductRepository;
@@ -23,11 +22,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<Product> findByOwnerWithFilter(User owner, String keyword, Category category, int page) {
-        // keyword kosong dianggap null supaya query tidak filter nama
-        String kw = (keyword == null || keyword.trim().isEmpty()) ? null : keyword.trim();
+    public Page<Product> findByOwner(User owner, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
-        return productRepository.findByOwnerWithFilter(owner, kw, category, pageable);
+        return productRepository.findByOwner(owner, pageable);
     }
 
     public Optional<Product> findByIdAndOwner(Long id, User owner) {

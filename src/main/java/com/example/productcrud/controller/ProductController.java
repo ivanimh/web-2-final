@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
@@ -44,28 +45,15 @@ public class ProductController {
     // LIST dengan pagination + search + filter
     @GetMapping("/products")
     public String listProducts(@AuthenticationPrincipal UserDetails userDetails,
-                               @RequestParam(defaultValue = "") String keyword,
-                               @RequestParam(required = false) Long categoryId,
                                @RequestParam(defaultValue = "0") int page,
                                Model model) {
         User currentUser = getCurrentUser(userDetails);
-
-        // Resolve category dari ID (null jika tidak dipilih)
-        Category selectedCategory = null;
-        if (categoryId != null) {
-            selectedCategory = categoryService.findByIdAndOwner(categoryId, currentUser).orElse(null);
-        }
-
-        Page<Product> productPage = productService.findByOwnerWithFilter(
-                currentUser, keyword, selectedCategory, page);
+        Page<Product> productPage = productService.findByOwner(currentUser, page);
 
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("categories", categoryService.findAllByOwner(currentUser));
         return "product/list";
     }
 
