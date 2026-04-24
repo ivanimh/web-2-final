@@ -14,5 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByOwner(Long ownerId, Pageable pageable);
 
-    Optional<Product> findByIdAndOwner(Long id, Long ownerId);
+    Optional<Product> findByIdAndOwnerId(Long id, Long ownerId);
 } //usernya ganti ke id

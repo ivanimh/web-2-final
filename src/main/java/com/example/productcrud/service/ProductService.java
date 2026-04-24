@@ -29,7 +29,7 @@ public class ProductService {
     }
 
     public Optional<Product> findByIdAndOwner(Long id, User owner) {
-        return productRepository.findByIdAndOwner(id, owner.getId());
+        return productRepository.findByIdAndOwnerId(id, owner.getId());
     }
 
     public Product save(Product product) {
@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     public void deleteByIdAndOwner(Long id, User owner) {
-        productRepository.findByIdAndOwner(id, owner.getId())
+        productRepository.findByIdAndOwnerId(id, owner.getId())
                 .ifPresent(productRepository::delete);
     }
 }
