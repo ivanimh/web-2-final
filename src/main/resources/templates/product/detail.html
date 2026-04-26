@@ -1,61 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: header}">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title th:text="${product.name}">Detail Produk</title>
 </head>
 <body>
-    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main>
+    <div class="container mt-4" style="max-width: 700px;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Detail Produk</h2>
+            <a href="/products" class="btn btn-outline-secondary">Kembali</a>
+        </div>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <h2 th:text="${product.name}" class="mb-4">Nama Produk</h2>
-
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-borderless mb-0">
-                            <tr>
-                                <th class="text-muted" style="width: 200px;">Nama</th>
-                                <td th:text="${product.name}">-</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Kategori</th>
-                                <td th:text="${product.category?.displayName}">-</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Harga</th>
-                                <td th:text="${'Rp ' + #numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')}">Rp 0</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Stok</th>
-                                <td th:text="${product.stock}">0</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Deskripsi</th>
-                                <td th:text="${product.description}">-</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Status</th>
-                                <td>
-                                    <span th:if="${product.active}" class="badge bg-success">Aktif</span>
-                                    <span th:unless="${product.active}" class="badge bg-danger">Tidak Aktif</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Tanggal Dibuat</th>
-                                <td th:text="${product.createdAt}">-</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2 mt-4">
-                    <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{/products}" class="btn btn-secondary">Kembali ke Daftar</a>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                    <tr>
+                        <th width="150">Nama</th>
+                        <td th:text="${product.name}"></td>
+                    </tr>
+                    <tr>
+                        <th>Kategori</th>
+                        <td th:text="${product.category != null ? product.category.name : '-'}"></td>
+                    </tr>
+                    <tr>
+                        <th>Harga</th>
+                        <td th:text="'Rp ' + ${#numbers.formatInteger(product.price, 1, 'COMMA')}"></td>
+                    </tr>
+                    <tr>
+                        <th>Stok</th>
+                        <td>
+                                <span th:text="${product.stock}"
+                                      th:class="${product.stock < 5} ? 'text-danger fw-bold' : ''"></span>
+                            <small th:if="${product.stock < 5}" class="text-danger"> (Stok menipis!)</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span th:if="${product.active}" class="badge bg-success">Aktif</span>
+                            <span th:unless="${product.active}" class="badge bg-secondary">Nonaktif</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td th:text="${product.description != null ? product.description : '-'}"></td>
+                    </tr>
+                    <tr>
+                        <th>Dibuat</th>
+                        <td th:text="${product.createdAt}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
 
-    <footer th:replace="~{fragments/layout :: footer}"></footer>
+        <div class="d-flex gap-2 mt-3">
+            <a th:href="@{/products/{id}/edit(id=${product.id})}"
+               class="btn btn-primary">Edit Produk</a>
+            <form th:action="@{/products/{id}/delete(id=${product.id})}"
+                  method="post"
+                  onsubmit="return confirm('Hapus produk ini?')">
+                <button type="submit" class="btn btn-danger">Hapus Produk</button>
+            </form>
+        </div>
+    </div>
+</main>
 </body>
 </html>

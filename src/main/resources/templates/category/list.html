@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Kategori Saya</title>
+</head>
+<body>
+<main>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Kategori Saya</h2>
+            <a href="/categories/new" class="btn btn-primary">+ Tambah Kategori</a>
+        </div>
+
+        <!-- Flash messages -->
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <!-- Kosong -->
+        <div th:if="${categories.empty}" class="text-center text-muted py-5">
+            <p>Belum ada kategori.</p>
+            <a href="/categories/new" class="btn btn-primary">Tambah Kategori Pertama</a>
+        </div>
+
+        <!-- Tabel kategori -->
+        <table th:unless="${categories.empty}" class="table table-bordered table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Nama</th>
+                <th>Deskripsi</th>
+                <th>Aksi</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cat, stat : ${categories}">
+                <td th:text="${stat.index + 1}"></td>
+                <td th:text="${cat.name}"></td>
+                <td th:text="${cat.description != null ? cat.description : '-'}"></td>
+                <td>
+                    <a th:href="@{/categories/{id}/edit(id=${cat.id})}"
+                       class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                    <form th:action="@{/categories/{id}/delete(id=${cat.id})}"
+                          method="post" style="display:inline"
+                          onsubmit="return confirm('Hapus kategori ini?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
