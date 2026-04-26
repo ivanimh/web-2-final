@@ -6,49 +6,68 @@
 </head>
 <body>
 <main>
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Kategori Saya</h2>
-            <a href="/categories/new" class="btn btn-primary">+ Tambah Kategori</a>
+    <div class="container mx-auto px-4 mt-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-3xl font-medium">Kategori Saya</h2>
+            <a href="/categories/new"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
+                + Tambah Kategori
+            </a>
         </div>
 
         <!-- Flash messages -->
-        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}"
+             class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
+             th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}"
+             class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+             th:text="${errorMessage}"></div>
 
         <!-- Kosong -->
-        <div th:if="${categories.empty}" class="text-center text-muted py-5">
-            <p>Belum ada kategori.</p>
-            <a href="/categories/new" class="btn btn-primary">Tambah Kategori Pertama</a>
+        <div th:if="${categories.empty}" class="text-center text-gray-500 py-12">
+            <p class="mb-4">Belum ada kategori.</p>
+            <a href="/categories/new"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
+                Tambah Kategori Pertama
+            </a>
         </div>
 
-        <!-- Tabel kategori -->
-        <table th:unless="${categories.empty}" class="table table-bordered table-hover">
-            <thead class="table-light">
-            <tr>
-                <th>#</th>
-                <th>Nama</th>
-                <th>Deskripsi</th>
-                <th>Aksi</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="cat, stat : ${categories}">
-                <td th:text="${stat.index + 1}"></td>
-                <td th:text="${cat.name}"></td>
-                <td th:text="${cat.description != null ? cat.description : '-'}"></td>
-                <td>
-                    <a th:href="@{/categories/{id}/edit(id=${cat.id})}"
-                       class="btn btn-sm btn-outline-primary me-1">Edit</a>
-                    <form th:action="@{/categories/{id}/delete(id=${cat.id})}"
-                          method="post" style="display:inline"
-                          onsubmit="return confirm('Hapus kategori ini?')">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- Tabel -->
+        <div class="overflow-x-auto">
+            <table th:unless="${categories.empty}"
+                   class="w-full border border-gray-200 bg-white shadow-sm rounded-lg overflow-hidden">
+                <thead class="bg-gray-100 border-b border-gray-200">
+                <tr>
+                    <th class="border-r border-gray-200 px-4 py-3 text-left font-medium text-gray-700">#</th>
+                    <th class="border-r border-gray-200 px-4 py-3 text-left font-medium text-gray-700">Nama</th>
+                    <th class="border-r border-gray-200 px-4 py-3 text-left font-medium text-gray-700">Deskripsi</th>
+                    <th class="px-4 py-3 text-left font-medium text-gray-700">Aksi</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                <tr th:each="cat, stat : ${categories}" class="hover:bg-gray-50 transition-colors">
+                    <td class="border-r border-gray-200 px-4 py-3" th:text="${stat.index + 1}"></td>
+                    <td class="border-r border-gray-200 px-4 py-3 font-medium" th:text="${cat.name}"></td>
+                    <td class="border-r border-gray-200 px-4 py-3 text-gray-500"
+                        th:text="${cat.description != null ? cat.description : '-'}"></td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <a th:href="@{/categories/{id}/edit(id=${cat.id})}"
+                           class="text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white px-2 py-1 rounded text-sm mr-1 inline-block transition-colors">
+                            Edit
+                        </a>
+                        <form th:action="@{/categories/{id}/delete(id=${cat.id})}"
+                              method="post" style="display:inline"
+                              onsubmit="return confirm('Hapus kategori ini?')">
+                            <button type="submit"
+                                    class="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white px-2 py-1 rounded text-sm inline-block transition-colors">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 </body>
