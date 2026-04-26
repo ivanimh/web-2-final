@@ -6,25 +6,24 @@
 </head>
 <body>
 <main>
-    <div class="container mt-4" style="max-width: 700px;">
-        <h2 th:text="${product.id != null} ? 'Edit Produk' : 'Tambah Produk'"></h2>
+    <div class="container mx-auto px-4 mt-8" style="max-width: 700px;">
+        <h2 th:text="${product.id != null} ? 'Edit Produk' : 'Tambah Produk'" class="text-3xl font-medium mb-6"></h2>
 
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${errorMessage}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" th:text="${errorMessage}"></div>
 
         <form th:action="@{/products/save}" th:object="${product}" method="post" class="mt-3">
             <input type="hidden" th:field="*{id}" />
             <input type="hidden" th:field="*{createdAt}" />
 
-            <div class="mb-3">
-                <label class="form-label">Nama Produk <span class="text-danger">*</span></label>
-                <input type="text" th:field="*{name}" class="form-control"
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Nama Produk <span class="text-red-500">*</span></label>
+                <input type="text" th:field="*{name}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
                        placeholder="Nama produk" required />
             </div>
 
-            <!-- Dropdown category dari entity (bukan enum) -->
-            <div class="mb-3">
-                <label class="form-label">Kategori</label>
-                <select name="categoryId" class="form-select">
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Kategori</label>
+                <select name="categoryId" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-white">
                     <option value="">-- Pilih Kategori --</option>
                     <option th:each="cat : ${categories}"
                             th:value="${cat.id}"
@@ -32,39 +31,39 @@
                             th:selected="${product.category != null and product.category.id == cat.id}">
                     </option>
                 </select>
-                <div class="form-text">
+                <div class="text-sm text-gray-500 mt-1">
                     Belum ada kategori?
-                    <a href="/categories/new" target="_blank">Buat kategori baru</a>
+                    <a href="/categories/new" target="_blank" class="text-blue-500 hover:text-blue-700 hover:underline">Buat kategori baru</a>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Harga <span class="text-danger">*</span></label>
-                <input type="number" th:field="*{price}" class="form-control"
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Harga <span class="text-red-500">*</span></label>
+                <input type="number" th:field="*{price}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
                        min="0" placeholder="0" required />
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Stok <span class="text-danger">*</span></label>
-                <input type="number" th:field="*{stock}" class="form-control"
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Stok <span class="text-red-500">*</span></label>
+                <input type="number" th:field="*{stock}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
                        min="0" placeholder="0" required />
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Deskripsi</label>
-                <textarea th:field="*{description}" class="form-control" rows="4"
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Deskripsi</label>
+                <textarea th:field="*{description}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow" rows="4"
                           placeholder="Deskripsi produk (opsional)"></textarea>
             </div>
 
-            <div class="mb-3 form-check">
-                <input type="checkbox" th:field="*{active}" class="form-check-input" />
-                <label class="form-check-label">Produk Aktif</label>
+            <div class="mb-4 flex items-center">
+                <input type="checkbox" th:field="*{active}" class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label class="text-gray-700">Produk Aktif</label>
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary"
+            <div class="flex gap-2 mt-6">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
                         th:text="${product.id != null} ? 'Simpan Perubahan' : 'Tambah Produk'"></button>
-                <a href="/products" class="btn btn-outline-secondary">Batal</a>
+                <a href="/products" class="border border-gray-500 text-gray-600 hover:bg-gray-500 hover:text-white px-4 py-2 rounded transition-colors">Batal</a>
             </div>
         </form>
     </div>

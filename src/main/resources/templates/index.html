@@ -3,24 +3,24 @@
 <head th:replace="~{fragments/layout :: header}">
 </head>
 <body>
-    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-8 text-center">
-                <h1 class="display-4 mb-4">Selamat Datang di Product CRUD</h1>
-                <p class="lead mb-4">
-                    Aplikasi manajemen produk sederhana untuk praktikum JPA Fundamentals.
-                    Saat ini data disimpan di dalam memori (ArrayList). Pada praktikum berikutnya,
-                    Anda akan menambahkan JPA untuk menyimpan data ke database.
-                </p>
-                <a th:href="@{/products}" class="btn btn-primary btn-lg">
-                    Lihat Daftar Produk
-                </a>
-            </div>
+<div class="container mx-auto px-4">
+    <div class="flex justify-center mt-20">
+        <div class="w-full md:w-2/3 text-center">
+            <h1 class="text-5xl font-light mb-6 text-gray-800">Selamat Datang di Product CRUD</h1>
+            <p class="text-xl font-light mb-8 text-gray-600 leading-relaxed">
+                Aplikasi manajemen produk sederhana untuk praktikum JPA Fundamentals.
+                Saat ini data disimpan di dalam memori (ArrayList). Pada praktikum berikutnya,
+                Anda akan menambahkan JPA untuk menyimpan data ke database.
+            </p>
+            <a th:href="@{/products}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-xl transition-colors shadow">
+                Lihat Daftar Produk
+            </a>
         </div>
     </div>
+</div>
 
-    <footer th:replace="~{fragments/layout :: footer}"></footer>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>
