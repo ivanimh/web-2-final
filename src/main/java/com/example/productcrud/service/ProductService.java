@@ -23,13 +23,14 @@ public class ProductService {
     }
 
     // Dipanggil dari ProductController
+    //dari databasenya itu descending, jadi disort dari yang paling baru
     public Page<Product> findByOwner(User owner, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
-        return productRepository.findByOwner(owner.getId(), pageable);
+        return productRepository.findByOwner_Id(owner.getId(), pageable);
     }
 
     public Optional<Product> findByIdAndOwner(Long id, User owner) {
-        return productRepository.findByIdAndOwnerId(id, owner.getId());
+        return productRepository.findByIdAndOwner_Id(id, owner.getId());
     }
 
     public Product save(Product product) {
@@ -37,7 +38,7 @@ public class ProductService {
     }
 
     public void deleteByIdAndOwner(Long id, User owner) {
-        productRepository.findByIdAndOwnerId(id, owner.getId())
+        productRepository.findByIdAndOwner_Id(id, owner.getId())
                 .ifPresent(productRepository::delete);
     }
 }
