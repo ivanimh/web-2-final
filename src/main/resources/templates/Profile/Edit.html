@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Edit Profil</title>
+</head>
+<body>
+<main>
+    <div class="container mx-auto px-4 mt-8" style="max-width: 600px;">
+        <h2 class="text-3xl font-medium mb-6">Edit Profil</h2>
+
+        <div th:if="${errorMessage}"
+             class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+             th:text="${errorMessage}"></div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <form th:action="@{/profile/edit}" th:object="${profileRequest}" method="post">
+
+                <!-- Nama Lengkap -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Nama Lengkap</label>
+                    <input type="text" th:field="*{fullName}"
+                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           placeholder="Nama lengkap kamu"/>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
+                    <input type="email" th:field="*{email}"
+                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           placeholder="contoh@email.com"/>
+                </div>
+
+                <!-- No. Telepon -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">No. Telepon</label>
+                    <input type="text" th:field="*{phoneNumber}"
+                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           placeholder="08xxxxxxxxxx"/>
+                </div>
+
+                <!-- Alamat -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Alamat</label>
+                    <textarea th:field="*{address}" rows="2"
+                              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                              placeholder="Alamat lengkap"></textarea>
+                </div>
+
+                <!-- Bio -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Bio</label>
+                    <textarea th:field="*{bio}" rows="3"
+                              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                              placeholder="Ceritakan sedikit tentang dirimu..."></textarea>
+                </div>
+
+                <!-- URL Foto Profil -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">URL Foto Profil</label>
+                    <input type="text" th:field="*{profileImageUrl}"
+                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           placeholder="https://contoh.com/foto.jpg"/>
+                    <p class="text-xs text-gray-400 mt-1">Masukkan URL gambar. Kosongkan jika tidak ingin mengubah.</p>
+                </div>
+
+                <!-- Tombol -->
+                <div class="flex gap-3">
+                    <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
+                        Simpan Perubahan
+                    </button>
+                    <a href="/profile"
+                       class="border border-gray-400 text-gray-600 hover:bg-gray-100 px-4 py-2 rounded text-sm transition-colors">
+                        Batal
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

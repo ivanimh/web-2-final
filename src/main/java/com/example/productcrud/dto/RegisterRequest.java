@@ -6,30 +6,24 @@ public class RegisterRequest {
     private String password;
     private String confirmPassword;
 
-    public RegisterRequest() {
-    }
+    // ── Field baru (opsional saat register) ──
+    private String fullName;
+    private String email;
 
-    public String getUsername() {
-        return username;
-    }
+    public RegisterRequest() {}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getConfirmPassword() { return confirmPassword; }
+    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }
