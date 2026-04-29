@@ -84,14 +84,14 @@ public class ProfileController {
     }
 
     // ── FORM CHANGE PASSWORD ──
-    @GetMapping("/change-password")
+    @GetMapping("/change-password.html")
     public String showChangePasswordForm(Model model) {
         model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
-        return "profile/change-password";
+        return "profile/change-password.html";
     }
 
     // ── PROSES CHANGE PASSWORD ──
-    @PostMapping("/change-password")
+    @PostMapping("/change-password.html")
     public String processChangePassword(@ModelAttribute ChangePasswordRequest req,
                                         @AuthenticationPrincipal UserDetails userDetails,
                                         RedirectAttributes redirectAttributes) {
@@ -100,20 +100,20 @@ public class ProfileController {
         // Validasi: password lama harus cocok
         if (!passwordEncoder.matches(req.getOldPassword(), user.getPassword())) {
             redirectAttributes.addFlashAttribute("errorMessage", "Password lama tidak sesuai!");
-            return "redirect:/profile/change-password";
+            return "redirect:/profile/change-password.html";
         }
 
         // Validasi: password baru tidak boleh kosong
         if (req.getNewPassword() == null || req.getNewPassword().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Password baru tidak boleh kosong!");
-            return "redirect:/profile/change-password";
+            return "redirect:/profile/change-password.html";
         }
 
         // Validasi: konfirmasi harus sama
         if (!req.getNewPassword().equals(req.getConfirmNewPassword())) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Password baru dan konfirmasi tidak cocok!");
-            return "redirect:/profile/change-password";
+            return "redirect:/profile/change-password.html";
         }
 
         // Encode dan simpan
