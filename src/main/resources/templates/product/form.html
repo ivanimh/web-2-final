@@ -5,7 +5,7 @@
     <title th:text="${product.id != null} ? 'Edit Produk' : 'Tambah Produk'"></title>
 </head>
 <body>
-<main>
+<main th:fragment="main">
     <div class="container mx-auto px-4 mt-8" style="max-width: 700px;">
         <h2 th:text="${product.id != null} ? 'Edit Produk' : 'Tambah Produk'" class="text-3xl font-medium mb-6"></h2>
 

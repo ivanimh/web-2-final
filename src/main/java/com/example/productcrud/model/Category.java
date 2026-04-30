@@ -1,6 +1,5 @@
 package com.example.productcrud.model;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -11,7 +10,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String name;
 
     @Column(columnDefinition = "TEXT")
@@ -21,9 +20,7 @@ public class Category {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    public Category() {
-
-    }
+    public Category() {}
 
     public Long getId() {
         return id;
@@ -35,7 +32,6 @@ public class Category {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -43,15 +39,13 @@ public class Category {
     public String getDescription() {
         return description;
     }
-
-    public void setDescription() {
+    public void setDescription(String description) {  // ← ditambah parameter String description
         this.description = description;
     }
 
     public User getOwner() {
         return owner;
     }
-
     public void setOwner(User owner) {
         this.owner = owner;
     }

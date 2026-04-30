@@ -27,7 +27,6 @@ public class ProfileController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Helper ambil user dari session
     private User getCurrentUser(UserDetails userDetails) {
         return userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
@@ -38,7 +37,7 @@ public class ProfileController {
     public String viewProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = getCurrentUser(userDetails);
         model.addAttribute("user", user);
-        return "profile/view";
+        return "Profile/view";  // ← disesuaikan dengan nama folder Profile/
     }
 
     // ── FORM EDIT PROFILE ──
@@ -55,7 +54,7 @@ public class ProfileController {
         req.setProfileImageUrl(user.getProfileImageUrl());
 
         model.addAttribute("profileRequest", req);
-        return "profile/edit";
+        return "Profile/Edit";  // ← disesuaikan dengan nama folder Profile/
     }
 
     // ── SIMPAN EDIT PROFILE ──
@@ -84,39 +83,35 @@ public class ProfileController {
     }
 
     // ── FORM CHANGE PASSWORD ──
-    @GetMapping("/change-password.html")
+    @GetMapping("/change-password")  // ← dihapus .html
     public String showChangePasswordForm(Model model) {
         model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
-        return "profile/change-password.html";
+        return "Profile/change-password";  // ← disesuaikan folder & dihapus .html
     }
 
     // ── PROSES CHANGE PASSWORD ──
-    @PostMapping("/change-password.html")
+    @PostMapping("/change-password")  // ← dihapus .html
     public String processChangePassword(@ModelAttribute ChangePasswordRequest req,
                                         @AuthenticationPrincipal UserDetails userDetails,
                                         RedirectAttributes redirectAttributes) {
         User user = getCurrentUser(userDetails);
 
-        // Validasi: password lama harus cocok
         if (!passwordEncoder.matches(req.getOldPassword(), user.getPassword())) {
             redirectAttributes.addFlashAttribute("errorMessage", "Password lama tidak sesuai!");
-            return "redirect:/profile/change-password.html";
+            return "redirect:/profile/change-password";  // ← dihapus .html
         }
 
-        // Validasi: password baru tidak boleh kosong
         if (req.getNewPassword() == null || req.getNewPassword().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Password baru tidak boleh kosong!");
-            return "redirect:/profile/change-password.html";
+            return "redirect:/profile/change-password";  // ← dihapus .html
         }
 
-        // Validasi: konfirmasi harus sama
         if (!req.getNewPassword().equals(req.getConfirmNewPassword())) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Password baru dan konfirmasi tidak cocok!");
-            return "redirect:/profile/change-password.html";
+            return "redirect:/profile/change-password";  // ← dihapus .html
         }
 
-        // Encode dan simpan
         user.setPassword(passwordEncoder.encode(req.getNewPassword()));
         userRepository.save(user);
 

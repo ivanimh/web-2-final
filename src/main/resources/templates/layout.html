@@ -1,71 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, main)">
 <head>
-    <title>Ganti Password</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Product CRUD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
-<body>
-<main>
-    <div class="container mx-auto px-4 mt-8" style="max-width: 500px;">
-        <h2 class="text-3xl font-medium mb-6">Ganti Password</h2>
+<body class="bg-gray-100 text-gray-900">
 
-        <!-- Flash messages -->
-        <div th:if="${successMessage}"
-             class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
-             th:text="${successMessage}"></div>
-        <div th:if="${errorMessage}"
-             class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-             th:text="${errorMessage}"></div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-            <form th:action="@{/profile/change-password}"
-                  th:object="${changePasswordRequest}" method="post">
-
-                <!-- Password Lama -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-medium mb-1">
-                        Password Lama <span class="text-red-500">*</span>
-                    </label>
-                    <input type="password" th:field="*{oldPassword}"
-                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           placeholder="Masukkan password lama" required/>
-                </div>
-
-                <!-- Password Baru -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-medium mb-1">
-                        Password Baru <span class="text-red-500">*</span>
-                    </label>
-                    <input type="password" th:field="*{newPassword}"
-                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           placeholder="Masukkan password baru" required/>
-                </div>
-
-                <!-- Konfirmasi Password Baru -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-medium mb-1">
-                        Konfirmasi Password Baru <span class="text-red-500">*</span>
-                    </label>
-                    <input type="password" th:field="*{confirmNewPassword}"
-                           class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           placeholder="Ulangi password baru" required/>
-                </div>
-
-                <!-- Tombol -->
-                <div class="flex gap-3">
-                    <button type="submit"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded text-sm transition-colors">
-                        🔒 Ubah Password
-                    </button>
-                    <a href="/profile"
-                       class="border border-gray-400 text-gray-600 hover:bg-gray-100 px-4 py-2 rounded text-sm transition-colors">
-                        Batal
-                    </a>
-                </div>
-
-            </form>
+<nav class="bg-gray-900 text-white shadow-md mb-6">
+    <div class="container mx-auto px-4 flex items-center justify-between py-3">
+        <div class="flex items-center gap-6">
+            <a class="text-xl font-medium text-white hover:text-gray-300 transition-colors" href="/products">Product CRUD</a>
+            <ul class="flex gap-4">
+                <li>
+                    <a class="text-gray-400 hover:text-white transition-colors" href="/products">Produk</a>
+                </li>
+                <li>
+                    <a class="text-gray-400 hover:text-white transition-colors" href="/categories">Kategori</a>
+                </li>
+                <li>
+                    <a class="text-gray-400 hover:text-white transition-colors" href="/dashboard">Dashboard</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="flex items-center gap-3">
+                <li>
+                    <a href="/profile" class="text-gray-400 hover:text-white transition-colors text-sm">Profil</a>
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="border border-gray-400 text-gray-300 hover:bg-gray-100 hover:text-gray-900 px-3 py-1 rounded text-sm transition-colors">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </div>
-</main>
+</nav>
+
+<div th:replace="${main}"></div>
+
 </body>
 </html>

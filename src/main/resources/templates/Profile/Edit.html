@@ -5,7 +5,7 @@
     <title>Edit Profil</title>
 </head>
 <body>
-<main>
+<main th:fragment="main">
     <div class="container mx-auto px-4 mt-8" style="max-width: 600px;">
         <h2 class="text-3xl font-medium mb-6">Edit Profil</h2>
 
@@ -16,7 +16,6 @@
         <div class="bg-white rounded-lg shadow p-6">
             <form th:action="@{/profile/edit}" th:object="${profileRequest}" method="post">
 
-                <!-- Nama Lengkap -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-1">Nama Lengkap</label>
                     <input type="text" th:field="*{fullName}"
@@ -24,7 +23,6 @@
                            placeholder="Nama lengkap kamu"/>
                 </div>
 
-                <!-- Email -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
                     <input type="email" th:field="*{email}"
@@ -32,7 +30,6 @@
                            placeholder="contoh@email.com"/>
                 </div>
 
-                <!-- No. Telepon -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-1">No. Telepon</label>
                     <input type="text" th:field="*{phoneNumber}"
@@ -40,7 +37,6 @@
                            placeholder="08xxxxxxxxxx"/>
                 </div>
 
-                <!-- Alamat -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-1">Alamat</label>
                     <textarea th:field="*{address}" rows="2"
@@ -48,7 +44,6 @@
                               placeholder="Alamat lengkap"></textarea>
                 </div>
 
-                <!-- Bio -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-1">Bio</label>
                     <textarea th:field="*{bio}" rows="3"
@@ -56,7 +51,6 @@
                               placeholder="Ceritakan sedikit tentang dirimu..."></textarea>
                 </div>
 
-                <!-- URL Foto Profil -->
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-medium mb-1">URL Foto Profil</label>
                     <input type="text" th:field="*{profileImageUrl}"
@@ -65,7 +59,6 @@
                     <p class="text-xs text-gray-400 mt-1">Masukkan URL gambar. Kosongkan jika tidak ingin mengubah.</p>
                 </div>
 
-                <!-- Tombol -->
                 <div class="flex gap-3">
                     <button type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">

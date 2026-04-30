@@ -5,7 +5,7 @@
     <title>Daftar Produk</title>
 </head>
 <body>
-<main>
+<main th:fragment="main">
     <div class="container mx-auto px-4 mt-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-3xl font-medium">Daftar Produk</h2>
@@ -50,8 +50,8 @@
                     <td class="border-r border-gray-200 px-4 py-2" th:text="${product.category != null ? product.category.name : '-'}"></td>
                     <td class="border-r border-gray-200 px-4 py-2 whitespace-nowrap" th:text="'Rp ' + ${#numbers.formatInteger(product.price, 1, 'COMMA')}"></td>
                     <td class="border-r border-gray-200 px-4 py-2">
-                            <span th:text="${product.stock}"
-                                  th:class="${product.stock < 5} ? 'text-red-600 font-bold' : ''"></span>
+                        <span th:text="${product.stock}"
+                              th:class="${product.stock < 5} ? 'text-red-600 font-bold' : ''"></span>
                     </td>
                     <td class="border-r border-gray-200 px-4 py-2">
                         <span th:if="${product.active}" class="bg-green-500 text-white px-2 py-1 rounded text-sm whitespace-nowrap">Aktif</span>
