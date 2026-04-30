@@ -1,71 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title th:text="${product.id != null} ? 'Edit Produk' : 'Tambah Produk'"></title>
+    <title th:text="${isEdit} ? 'Edit Produk' : 'Tambah Produk'"></title>
 </head>
 <body>
 <main th:fragment="main">
-    <div class="container mx-auto px-4 mt-8" style="max-width: 700px;">
-        <h2 th:text="${product.id != null} ? 'Edit Produk' : 'Tambah Produk'" class="text-3xl font-medium mb-6"></h2>
+    <div class="max-w-2xl mx-auto">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900" th:text="${isEdit} ? 'Edit Produk' : 'Tambah Produk'">Tambah Produk</h1>
+        </div>
 
-        <div th:if="${errorMessage}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" th:text="${errorMessage}"></div>
+        <div th:if="${errorMessage}" class="mb-5 p-3 bg-red-50 text-red-600 text-sm rounded-md border border-red-100" th:text="${errorMessage}"></div>
 
-        <form th:action="@{/products/save}" th:object="${product}" method="post" class="mt-3">
-            <input type="hidden" th:field="*{id}" />
-            <input type="hidden" th:field="*{createdAt}" />
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
+            <form th:action="@{/products/save}" th:object="${product}" method="post" class="space-y-5">
+                <input type="hidden" th:field="*{id}" />
 
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Nama Produk <span class="text-red-500">*</span></label>
-                <input type="text" th:field="*{name}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-                       placeholder="Nama produk" required />
-            </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Produk <span class="text-red-500">*</span></label>
+                        <input type="text" th:field="*{name}" required
+                               class="w-full bg-white border border-gray-300 text-gray-900 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
 
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Kategori</label>
-                <select name="categoryId" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-white">
-                    <option value="">-- Pilih Kategori --</option>
-                    <option th:each="cat : ${categories}"
-                            th:value="${cat.id}"
-                            th:text="${cat.name}"
-                            th:selected="${product.category != null and product.category.id == cat.id}">
-                    </option>
-                </select>
-                <div class="text-sm text-gray-500 mt-1">
-                    Belum ada kategori?
-                    <a href="/categories/new" target="_blank" class="text-blue-500 hover:text-blue-700 hover:underline">Buat kategori baru</a>
+                    <!-- Asumsi Anda memiliki input dropdown untuk kategori di controller produk.
+                         Jika Anda punya th:each untuk kategori, Anda bisa menambahkannya di sini. -->
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Harga <span class="text-red-500">*</span></label>
+                        <input type="number" th:field="*{price}" required min="0"
+                               class="w-full bg-white border border-gray-300 text-gray-900 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Stok <span class="text-red-500">*</span></label>
+                        <input type="number" th:field="*{stock}" required min="0"
+                               class="w-full bg-white border border-gray-300 text-gray-900 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" th:field="*{active}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                            <span class="text-sm font-medium text-gray-700">Produk Aktif (Ditampilkan)</span>
+                        </label>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Deskripsi</label>
+                        <textarea th:field="*{description}" rows="3"
+                                  class="w-full bg-white border border-gray-300 text-gray-900 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"></textarea>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Harga <span class="text-red-500">*</span></label>
-                <input type="number" th:field="*{price}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-                       min="0" placeholder="0" required />
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Stok <span class="text-red-500">*</span></label>
-                <input type="number" th:field="*{stock}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-                       min="0" placeholder="0" required />
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Deskripsi</label>
-                <textarea th:field="*{description}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow" rows="4"
-                          placeholder="Deskripsi produk (opsional)"></textarea>
-            </div>
-
-            <div class="mb-4 flex items-center">
-                <input type="checkbox" th:field="*{active}" class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <label class="text-gray-700">Produk Aktif</label>
-            </div>
-
-            <div class="flex gap-2 mt-6">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
-                        th:text="${product.id != null} ? 'Simpan Perubahan' : 'Tambah Produk'"></button>
-                <a href="/products" class="border border-gray-500 text-gray-600 hover:bg-gray-500 hover:text-white px-4 py-2 rounded transition-colors">Batal</a>
-            </div>
-        </form>
+                <div class="flex gap-3 pt-4 border-t border-gray-100 mt-6">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm font-medium transition-colors"
+                            th:text="${isEdit} ? 'Simpan Perubahan' : 'Tambah Produk'">Simpan</button>
+                    <a href="/products" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-md text-sm font-medium transition-colors">Batal</a>
+                </div>
+            </form>
+        </div>
     </div>
 </main>
 </body>

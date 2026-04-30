@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
@@ -42,18 +41,33 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    // LIST dengan pagination + search + filter
+    // LOGIKA SEARCH & FILTER TERSAMBUNG KE HTML
     @GetMapping("/products")
-    public String listProducts(@AuthenticationPrincipal UserDetails userDetails,
-                               @RequestParam(defaultValue = "0") int page,
-                               Model model) {
-        User currentUser = getCurrentUser(userDetails);
-        Page<Product> productPage = productService.findByOwner(currentUser, page);
+    public String listProducts(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "")  String keyword,
+            @RequestParam(required = false)   Long   category,
+            @RequestParam(defaultValue = "0") int    page,
+            Model model) {
 
-        model.addAttribute("products", productPage.getContent());
+        User currentUser = getCurrentUser(userDetails);
+
+        // Ambil produk dengan search & filter
+        Page<Product> productPage = productService.searchByOwner(currentUser, keyword, category, page);
+
+        // Data produk & paginasi
+        model.addAttribute("products",    productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("totalItems", productPage.getTotalElements());
+        model.addAttribute("totalPages",  productPage.getTotalPages());
+        model.addAttribute("totalItems",  productPage.getTotalElements());
+
+        // Data untuk dropdown filter kategori
+        model.addAttribute("categories",       categoryService.findAllByOwner(currentUser));
+
+        // Kembalikan nilai filter ke view agar form tetap terisi
+        model.addAttribute("keyword",          keyword);
+        model.addAttribute("selectedCategory", category);
+
         return "product/list";
     }
 
@@ -98,7 +112,6 @@ public class ProductController {
             }
         }
 
-        // Set category dari ID yang dipilih
         if (categoryId != null) {
             categoryService.findByIdAndOwner(categoryId, currentUser)
                     .ifPresent(product::setCategory);

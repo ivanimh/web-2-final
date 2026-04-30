@@ -1,176 +1,89 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
-
-<title>Dashboard</title>
-
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
 <main th:fragment="main">
-    <div class="container mx-auto px-4 py-6 max-w-6xl">
 
-        <li>
-            <a class="text-gray-400 hover:text-white transition-colors" href="/dashboard">Dashboard</a>
-        </li>
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p class="text-gray-500 mt-1 text-sm">
+            Selamat datang kembali, <span class="font-semibold text-gray-800" th:text="${username}">User</span>. Berikut ringkasan inventori Anda.
+        </p>
+    </div>
 
+    <!-- Empty State (Jika tidak ada produk) -->
+    <div th:if="${totalProduk == 0}" class="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-sm">
+        <h2 class="text-lg font-medium text-gray-800 mb-2">Belum ada produk</h2>
+        <p class="text-gray-500 text-sm mb-6">Mulai tambahkan produk pertama Anda untuk melihat statistik inventori.</p>
+        <a th:href="@{/products/new}" class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+            + Tambah Produk
+        </a>
+    </div>
 
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-            <p class="text-gray-500 mt-1">
-                Selamat datang kembali, <span class="font-semibold text-gray-700" th:text="${username}">User</span>!
-                Berikut ringkasan produk Anda.
-            </p>
+    <!-- Tampilan Jika Ada Produk -->
+    <div th:if="${totalProduk > 0}">
+        <!-- Grid Statistik Utama -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <p class="text-sm text-gray-500 font-medium">Total Produk</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1" th:text="${totalProduk}">0</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <p class="text-sm text-gray-500 font-medium">Nilai Inventory</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1" th:text="${totalNilaiInventory}">Rp 0</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <p class="text-sm text-gray-500 font-medium">Produk Aktif</p>
+                <p class="text-2xl font-bold text-green-600 mt-1" th:text="${produkAktif}">0</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <p class="text-sm text-gray-500 font-medium">Tidak Aktif</p>
+                <p class="text-2xl font-bold text-red-600 mt-1" th:text="${produkTidakAktif}">0</p>
+            </div>
         </div>
 
+        <!-- Grid Detail (Kategori & Low Stock) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Produk per Kategori -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <h2 class="text-base font-semibold text-gray-800 mb-4">Produk per Kategori</h2>
+                <p th:if="${produkPerKategori.isEmpty()}" class="text-gray-400 text-sm italic">Belum ada kategori terdaftar.</p>
 
-        <div th:if="${totalProduk == 0}"
-             class="flex flex-col items-center justify-center bg-white rounded-2xl shadow p-16 text-center">
-            <svg class="w-20 h-20 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
-            </svg>
-            <h2 class="text-xl font-semibold text-gray-600 mb-2">Belum ada produk</h2>
-            <p class="text-gray-400 mb-6">Mulai tambahkan produk pertama Anda untuk melihat statistik di sini.</p>
-            <a th:href="@{/products/new}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow">
-                + Tambah Produk Pertama
-            </a>
-        </div>
-
-
-        <div th:if="${totalProduk > 0}">
-
-            <!-- Stat Cards: Total Produk & Nilai Inventory -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-
-
-                <div class="bg-white rounded-2xl shadow p-6 flex items-center gap-5">
-                    <div class="bg-blue-100 p-4 rounded-xl">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Total Produk</p>
-                        <p class="text-3xl font-bold text-gray-800" th:text="${totalProduk}">0</p>
-                    </div>
-                </div>
-
-
-                <div class="bg-white rounded-2xl shadow p-6 flex items-center gap-5">
-                    <div class="bg-green-100 p-4 rounded-xl">
-                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Total Nilai Inventory</p>
-                        <p class="text-2xl font-bold text-gray-800" th:text="${totalNilaiInventory}">Rp 0</p>
-                    </div>
-                </div>
+                <ul th:unless="${produkPerKategori.isEmpty()}" class="divide-y divide-gray-100">
+                    <li th:each="entry : ${produkPerKategori}" class="py-3 flex justify-between items-center">
+                        <span class="text-sm text-gray-600" th:text="${entry.key}">Kategori</span>
+                        <span class="text-xs font-medium bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full" th:text="${entry.value} + ' item'">0 item</span>
+                    </li>
+                </ul>
             </div>
 
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-
-
-                <div class="bg-white rounded-2xl shadow p-6 flex items-center gap-5">
-                    <div class="bg-emerald-100 p-4 rounded-xl">
-                        <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Produk Aktif</p>
-                        <p class="text-3xl font-bold text-emerald-600" th:text="${produkAktif}">0</p>
-                    </div>
+            <!-- Peringatan Stok Menipis -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-semibold text-gray-800">Stok Menipis</h2>
+                    <span class="text-[10px] uppercase font-bold tracking-wider text-orange-500 bg-orange-50 px-2 py-1 rounded-sm">Stok < 5</span>
                 </div>
 
+                <p th:if="${lowStockProducts.isEmpty()}" class="text-gray-400 text-sm italic">Stok produk Anda aman.</p>
 
-                <div class="bg-white rounded-2xl shadow p-6 flex items-center gap-5">
-                    <div class="bg-red-100 p-4 rounded-xl">
-                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 font-medium">Produk Tidak Aktif</p>
-                        <p class="text-3xl font-bold text-red-500" th:text="${produkTidakAktif}">0</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                        </svg>
-                        Produk per Kategori
-                    </h2>
-
-
-                    <p th:if="${produkPerKategori.isEmpty()}" class="text-gray-400 text-sm italic">
-                        Belum ada produk dengan kategori.
-                    </p>
-
-
-                    <ul th:unless="${produkPerKategori.isEmpty()}" class="space-y-3">
-                        <li th:each="entry : ${produkPerKategori}"
-                            class="flex items-center justify-between">
-                            <span class="text-gray-600 text-sm font-medium" th:text="${entry.key}">Kategori</span>
-                            <span class="bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full"
-                                  th:text="${entry.value} + ' produk'">0 produk</span>
-                        </li>
-                    </ul>
-                </div>
-
-
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                        </svg>
-                        Low Stock
-                        <span class="ml-auto bg-orange-100 text-orange-600 text-xs font-semibold px-2 py-0.5 rounded-full">
-                        stock &lt; 5
-                    </span>
-                    </h2>
-
-
-                    <p th:if="${lowStockProducts.isEmpty()}" class="text-gray-400 text-sm italic">
-                        Semua produk memiliki stock yang cukup. 🎉
-                    </p>
-
-
-                    <ul th:unless="${lowStockProducts.isEmpty()}" class="space-y-3">
-                        <li th:each="p : ${lowStockProducts}"
-                            class="flex items-center justify-between border-b border-gray-100 pb-2 last:border-0 last:pb-0">
-                            <div>
-                                <p class="text-sm font-medium text-gray-700" th:text="${p.name}">Nama Produk</p>
-                                <p class="text-xs text-gray-400"
-                                   th:text="${p.category != null ? p.category.name : 'Tanpa Kategori'}">Kategori</p>
-                            </div>
-                            <span th:classappend="${p.stock == 0} ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'"
-                                  class="text-xs font-bold px-3 py-1 rounded-full">
-                            Stok: <span th:text="${p.stock}">0</span>
+                <ul th:unless="${lowStockProducts.isEmpty()}" class="divide-y divide-gray-100">
+                    <li th:each="p : ${lowStockProducts}" class="py-3 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-800" th:text="${p.name}">Nama Produk</p>
+                            <p class="text-xs text-gray-500 mt-0.5" th:text="${p.category != null ? p.category.name : 'Tanpa Kategori'}">Kategori</p>
+                        </div>
+                        <span th:classappend="${p.stock == 0} ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'"
+                              class="text-xs font-semibold px-2.5 py-1 rounded-full border border-transparent"
+                              th:text="'Stok: ' + ${p.stock}">0
                         </span>
-                        </li>
-                    </ul>
-                </div>
+                    </li>
+                </ul>
             </div>
-
         </div>
-
-
     </div>
 </main>
-
+</body>
 </html>

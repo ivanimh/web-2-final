@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: header}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Beranda - ProductCRUD</title>
 </head>
 <body>
-<nav th:replace="~{fragments/layout :: navbar}"></nav>
-
-<div class="container mx-auto px-4">
-    <div class="flex justify-center mt-20">
-        <div class="w-full md:w-2/3 text-center">
-            <h1 class="text-5xl font-light mb-6 text-gray-800">Selamat Datang di Product CRUD</h1>
-            <p class="text-xl font-light mb-8 text-gray-600 leading-relaxed">
-                Aplikasi manajemen produk sederhana untuk praktikum JPA Fundamentals.
-                Saat ini data disimpan di dalam memori (ArrayList). Pada praktikum berikutnya,
-                Anda akan menambahkan JPA untuk menyimpan data ke database.
+<main th:fragment="main">
+    <div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <div class="max-w-3xl">
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4 tracking-tight">
+                Kelola Inventori <span class="text-blue-600">Lebih Efisien</span>
+            </h1>
+            <p class="text-lg text-gray-500 mb-8 max-w-xl mx-auto leading-relaxed">
+                Aplikasi manajemen produk sederhana dan bersih untuk kebutuhan pencatatan inventori barang Anda.
             </p>
-            <a th:href="@{/products}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-xl transition-colors shadow">
-                Lihat Daftar Produk
-            </a>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a th:href="@{/dashboard}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-sm font-medium transition-colors">
+                    Buka Dashboard
+                </a>
+                <a th:href="@{/products}" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-8 py-3 rounded-md text-sm font-medium transition-colors">
+                    Lihat Produk
+                </a>
+            </div>
         </div>
     </div>
-</div>
-
-<footer th:replace="~{fragments/layout :: footer}"></footer>
+</main>
 </body>
 </html>

@@ -22,11 +22,19 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    // Dipanggil dari ProductController
-    //dari databasenya itu descending, jadi disort dari yang paling baru
     public Page<Product> findByOwner(User owner, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
         return productRepository.findByOwner_Id(owner.getId(), pageable);
+    }
+
+    // LOGIKA SEARCH & FILTER
+    public Page<Product> searchByOwner(User owner, String keyword, Long categoryId, int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
+
+        // Normalisasi: string kosong dianggap null agar query JPQL tidak memfilter
+        String kw = (keyword != null && !keyword.isBlank()) ? keyword.trim() : null;
+
+        return productRepository.searchByOwner(owner.getId(), kw, categoryId, pageable);
     }
 
     public Optional<Product> findByIdAndOwner(Long id, User owner) {

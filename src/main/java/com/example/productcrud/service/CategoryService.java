@@ -21,6 +21,15 @@ public class CategoryService {
         return categoryRepository.findByOwner(owner);
     }
 
+    // =====================================================
+    // SEARCH — partial match nama kategori, case-insensitive
+    // keyword blank/null -> kembalikan semua
+    // =====================================================
+    public List<Category> searchByOwner(User owner, String keyword) {
+        String kw = (keyword != null && !keyword.isBlank()) ? keyword.trim() : null;
+        return categoryRepository.searchByOwner(owner, kw);
+    }
+
     public Optional<Category> findByIdAndOwner(Long id, User owner) {
         return categoryRepository.findByIdAndOwner(id, owner);
     }

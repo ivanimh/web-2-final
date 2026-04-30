@@ -28,11 +28,17 @@ public class CategoryController {
                 .orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
     }
 
-    // LIST
+    // =====================================================
+    // LIST + SEARCH berdasarkan nama kategori
+    // Query param: ?keyword=...
+    // =====================================================
     @GetMapping
-    public String listCategories(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String listCategories(@AuthenticationPrincipal UserDetails userDetails,
+                                 @RequestParam(defaultValue = "") String keyword,
+                                 Model model) {
         User currentUser = getCurrentUser(userDetails);
-        model.addAttribute("categories", categoryService.findAllByOwner(currentUser));
+        model.addAttribute("categories", categoryService.searchByOwner(currentUser, keyword));
+        model.addAttribute("keyword", keyword);
         return "category/list";
     }
 
@@ -69,13 +75,11 @@ public class CategoryController {
                                RedirectAttributes redirectAttributes) {
         User currentUser = getCurrentUser(userDetails);
 
-        // Validasi nama tidak boleh kosong
         if (category.getName() == null || category.getName().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Nama kategori tidak boleh kosong.");
             return "redirect:/categories/new";
         }
 
-        // Jika edit, pastikan milik user ini
         if (category.getId() != null) {
             boolean isOwner = categoryService.findByIdAndOwner(category.getId(), currentUser).isPresent();
             if (!isOwner) {
@@ -84,7 +88,6 @@ public class CategoryController {
             }
         }
 
-        // Cek duplikat nama (untuk kategori baru saja)
         if (category.getId() == null && categoryService.existsByNameAndOwner(category.getName().trim(), currentUser)) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Nama kategori '" + category.getName() + "' sudah ada.");
