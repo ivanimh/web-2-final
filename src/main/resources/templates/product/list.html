@@ -14,11 +14,10 @@
         <div th:if="${successMessage}" class="mb-5 p-3 bg-green-50 text-green-600 text-sm rounded-md border border-green-100" th:text="${successMessage}"></div>
         <div th:if="${errorMessage}" class="mb-5 p-3 bg-red-50 text-red-600 text-sm rounded-md border border-red-100" th:text="${errorMessage}"></div>
 
-        <!-- FITUR SEARCH & FILTER -->
+        <!-- Search & Filter -->
         <form th:action="@{/products}" method="get" class="mb-6 bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-4 sm:items-end">
             <div class="flex-1 w-full">
                 <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1.5">Cari Berdasarkan Nama</label>
-                <!-- pastikan name="keyword" agar ditangkap @RequestParam("keyword") -->
                 <input type="text" id="keyword" name="keyword" th:value="${keyword}"
                        class="w-full bg-white border border-gray-300 text-gray-900 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                        placeholder="Ketik nama produk...">
@@ -26,7 +25,6 @@
 
             <div class="w-full sm:w-64">
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-1.5">Kategori</label>
-                <!-- pastikan name="category" agar ditangkap @RequestParam("category") -->
                 <select id="category" name="category"
                         class="w-full bg-white border border-gray-300 text-gray-900 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Semua Kategori</option>
@@ -47,13 +45,13 @@
             </div>
         </form>
 
-        <!-- Empty State (Sesuai Kriteria Rubrik) -->
+        <!-- Empty State -->
         <div th:if="${products.empty}" class="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-sm">
             <p class="text-gray-600 text-base font-medium">Tidak ada produk.</p>
             <p class="text-gray-400 text-sm mt-1">Coba sesuaikan kata kunci pencarian atau filter kategori Anda.</p>
         </div>
 
-        <!-- Data Table -->
+        <!-- Tabel -->
         <div th:unless="${products.empty}" class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -68,19 +66,31 @@
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                    <!-- Penomoran otomatis menyesuaikan halaman (page * size + index + 1) -->
                     <tr th:each="p, stat : ${products}" class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${(currentPage * 10) + stat.index + 1}">1</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${p.name}">Nama</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell" th:text="${p.category != null ? p.category.name : '-'}">-</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="'Rp ' + ${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')}">Harga</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                            th:text="${(currentPage * 10) + stat.index + 1}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                            th:text="${p.name}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell"
+                            th:text="${p.category != null ? p.category.name : '-'}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                            th:text="'Rp ' + ${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')}"></td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span th:text="${p.stock}" th:class="${p.stock < 5} ? 'font-bold text-red-600' : 'text-gray-900'">0</span>
+                                <span th:text="${p.stock}"
+                                      th:class="${p.stock < 5} ? 'font-bold text-red-600' : 'text-gray-900'"></span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center gap-3">
-                                <a th:href="@{/products/{id}(id=${p.id})}" class="text-gray-600 hover:text-gray-900">Detail</a>
-                                <a th:href="@{/products/{id}/edit(id=${p.id})}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                                <a th:href="@{/products/{id}(id=${p.id})}"
+                                   class="text-gray-600 hover:text-gray-900">Detail</a>
+                                <a th:href="@{/products/{id}/edit(id=${p.id})}"
+                                   class="text-blue-600 hover:text-blue-900">Edit</a>
+                                <form th:action="@{/products/{id}/delete(id=${p.id})}"
+                                      method="post" style="display:inline"
+                                      onsubmit="return confirm('Hapus produk ini?')">
+                                    <button type="submit"
+                                            class="text-red-600 hover:text-red-900">Hapus</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -88,19 +98,33 @@
                 </table>
             </div>
 
-            <!-- Simple Pagination Controls (jika total halaman > 1) -->
-            <div th:if="${totalPages > 1}" class="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center justify-between">
-                <span class="text-sm text-gray-700" th:text="'Menampilkan halaman ' + (${currentPage + 1}) + ' dari ' + ${totalPages}"></span>
-                <div class="flex gap-2">
+            <!-- Pagination -->
+            <div th:if="${totalPages > 1}" class="bg-gray-50 px-6 py-3 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="text-sm text-gray-700"
+                      th:text="'Menampilkan halaman ' + (${currentPage + 1}) + ' dari ' + ${totalPages}"></span>
+
+                <div class="flex gap-1">
+                    <!-- Sebelumnya -->
                     <a th:if="${currentPage > 0}"
                        th:href="@{/products(keyword=${keyword}, category=${selectedCategory}, page=${currentPage - 1})}"
                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Sebelumnya
+                        &laquo; Sebelumnya
                     </a>
+
+                    <!-- Nomor halaman -->
+                    <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                       th:href="@{/products(keyword=${keyword}, category=${selectedCategory}, page=${i})}"
+                       th:text="${i + 1}"
+                       th:class="${i == currentPage} ?
+                           'px-3 py-1 border rounded-md text-sm font-medium bg-blue-600 text-white border-blue-600' :
+                           'px-3 py-1 border rounded-md text-sm font-medium bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
+                    </a>
+
+                    <!-- Selanjutnya -->
                     <a th:if="${currentPage < totalPages - 1}"
                        th:href="@{/products(keyword=${keyword}, category=${selectedCategory}, page=${currentPage + 1})}"
                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Selanjutnya
+                        Selanjutnya &raquo;
                     </a>
                 </div>
             </div>
