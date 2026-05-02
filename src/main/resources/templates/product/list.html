@@ -120,7 +120,6 @@
                            'px-3 py-1 border rounded-md text-sm font-medium bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
                     </a>
 
-                    <!-- Selanjutnya -->
                     <a th:if="${currentPage < totalPages - 1}"
                        th:href="@{/products(keyword=${keyword}, category=${selectedCategory}, page=${currentPage + 1})}"
                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">

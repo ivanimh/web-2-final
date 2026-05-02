@@ -16,7 +16,6 @@
         <div th:if="${successMessage}" class="mb-5 p-3 bg-green-50 text-green-600 text-sm rounded-md border border-green-100" th:text="${successMessage}"></div>
         <div th:if="${errorMessage}" class="mb-5 p-3 bg-red-50 text-red-600 text-sm rounded-md border border-red-100" th:text="${errorMessage}"></div>
 
-        <!-- Empty State -->
         <div th:if="${categories.empty}" class="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-sm">
             <p class="text-gray-500 text-sm mb-4">Belum ada kategori yang dibuat.</p>
             <a href="/categories/new" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">

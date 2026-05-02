@@ -6,7 +6,6 @@
 <body>
 <main th:fragment="main">
 
-    <!-- Header -->
     <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
         <p class="text-gray-500 mt-1 text-sm">
@@ -14,7 +13,6 @@
         </p>
     </div>
 
-    <!-- Empty State (Jika tidak ada produk) -->
     <div th:if="${totalProduk == 0}" class="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-sm">
         <h2 class="text-lg font-medium text-gray-800 mb-2">Belum ada produk</h2>
         <p class="text-gray-500 text-sm mb-6">Mulai tambahkan produk pertama Anda untuk melihat statistik inventori.</p>
@@ -23,9 +21,7 @@
         </a>
     </div>
 
-    <!-- Tampilan Jika Ada Produk -->
     <div th:if="${totalProduk > 0}">
-        <!-- Grid Statistik Utama -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
                 <p class="text-sm text-gray-500 font-medium">Total Produk</p>
@@ -72,7 +68,7 @@
                 <ul th:unless="${lowStockProducts.isEmpty()}" class="divide-y divide-gray-100">
                     <li th:each="p : ${lowStockProducts}" class="py-3 flex justify-between items-center">
                         <div>
-                            <p class="text-sm font-medium text-gray-800" th:text="${p.name}">Nama Produk</p>
+                            <p class="text-sm fo    nt-medium text-gray-800" th:text="${p.name}">Nama Produk</p>
                             <p class="text-xs text-gray-500 mt-0.5" th:text="${p.category != null ? p.category.name : 'Tanpa Kategori'}">Kategori</p>
                         </div>
                         <span th:classappend="${p.stock == 0} ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'"
